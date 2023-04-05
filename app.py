@@ -27,7 +27,8 @@ def product_form(product, create):
         if len(errors) == 0:
             product_repository.save(product)
 
-            return redirect(url_for("products_list"))
+            if create:
+                return redirect(url_for("products_list"))
 
     name = request.args.get('name')
 
@@ -38,7 +39,7 @@ def product_form(product, create):
 
     return render_template(
         'products/list.html',
-        create=True,
+        create=create,
         default_product=product,
         errors=errors,
         products=products,

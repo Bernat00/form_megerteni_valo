@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SpacePort 0.6 - Products</title>
+
+    <script>
+        function deleteProduct() {
+            if (confirm('Delete product?')) {
+                this.closest('form').submit();
+            }
+
+            return false;
+        }
+    </script>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('products_list') }}">Products</a></li>
+        <li><a href="{{ url_for('products_create') }}">Create products</a></li>
+    </ul>
+    <form>
+        <input type="text" name="name" value="{{ name if name else '' }}">
+        <button type="submit">Search</button>
+    </form>
+</nav>
+
+<main>
+    <h1>SpacePort 0.6 - Products</h1>
+    <h2>
+        {% if create %}
+            Create product
+        {% else %}
+            Edit product
+        {% endif %}
+    </h2>
+    <form method="post">
+        <table>
+            <tr>
+                <th><label for="name">Name:</label></th>
+                <td><input type="text" name="name" value="{{ default_product.name }}" id="name"></td>
+            </tr>
+            <tr>
+                <th><label for="unit_price">Unit price:</label></th>
+                <td><input type="number" name="unit_price" value="{{ default_product.unit_price }}" id="unit_price"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">
+                        {% if create %}
+                            Create
+                        {% else %}
+                            Save
+                        {% endif %}
+                    </button>
+                </td>
+            </tr>
+        </table>
+        {% if errors and errors|length > 0 %}
+            <h2>Errors:</h2>
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </form>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Unit price</th>
+            <th colspan="2"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.unit_price }}</td>
+                <td><a href="{{ url_for('products_edit', product_id=product.id) }}">Edit</a></td>
+                <td>
+                    <form action="{{ url_for('products_delete', product_id=product.id) }}" method="post">
+                        <a href="#" onclick="deleteProduct.call(this)">Delete</a>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+</main>
+
+</body>
+</html>
